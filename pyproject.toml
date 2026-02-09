@@ -3,11 +3,12 @@ requires = ["uv_build>=0.10.0,<0.11.0"]
 build-backend = "uv_build"
 
 [project]
-name = "sheets"
+name = "sheet-ripper"
 version = "0.1.0"
 description = "Download and Upload Google Sheets."
 authors = [{ name = "Rafay Khan", email = "contact.hazelnut560@passinbox.com" }]
 license = "MIT"
+license-files = ["LICEN[CS]E*"]
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
@@ -17,10 +18,10 @@ dependencies = [
 ]
 
 [project.scripts]
-sheets = "sheets:__main__.main"
+sheets = "sheet_ripper:__main__.main"
 
 [project.urls]
-Homepage = "https://github.com/rafaykhan-source/sheets"
+Homepage = "https://github.com/rafaykhan-source/sheet-ripper"
 
 [tool.rumdl.MD013]
 reflow = true

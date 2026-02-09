@@ -34,5 +34,7 @@ sheets --url "your_spreadsheet_url_here"
 
 ```bash
 prek install
-uv run -m sheets -h
+uv sync
+. .venv/bin/activate
+sheets -h
 ```

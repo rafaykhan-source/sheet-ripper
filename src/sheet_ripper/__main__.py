@@ -1,7 +1,7 @@
-from sheets.cli import get_args
-from sheets.service import SheetService
-from sheets.utilities import get_logger
-from sheets.writer import CSVWriter
+from sheet_ripper.cli import get_args
+from sheet_ripper.service import SheetService
+from sheet_ripper.utilities import get_logger
+from sheet_ripper.writer import CSVWriter
 
 
 def main() -> None:

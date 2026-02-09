@@ -1,6 +1,6 @@
 import argparse
 
-from sheets.utilities import get_spreadsheet_id
+from sheet_ripper.utilities import get_spreadsheet_id
 
 
 def get_args():
