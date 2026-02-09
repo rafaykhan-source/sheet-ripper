@@ -13,15 +13,15 @@
       "level": "INFO",
       "stream": "ext://sys.stdout"
     },
-    "ripperHandler": {
+    "sheetsHandler": {
       "class": "logging.handlers.RotatingFileHandler",
       "formatter": "simpleFormatter",
       "level": "DEBUG",
-      "filename": "logs/ripper.log"
+      "filename": "logs/sheets.log"
     }
   },
   "root": {
     "level": "DEBUG",
-    "handlers": ["console", "ripperHandler"]
+    "handlers": ["console", "sheetsHandler"]
   }
 }

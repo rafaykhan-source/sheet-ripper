@@ -1,15 +1,27 @@
+[build-system]
+requires = ["uv_build>=0.10.0,<0.11.0"]
+build-backend = "uv_build"
+
 [project]
-name = "sheet-ripper"
+name = "sheets"
 version = "0.1.0"
-description = "Downloads google sheets."
+description = "Download and Upload Google Sheets."
+authors = [{ name = "Rafay Khan", email = "contact.hazelnut560@passinbox.com" }]
+license = "MIT"
+license-files = ["MIT"]
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "google-api-python-client>=2.183.0",
-    "google-auth-httplib2>=0.2.0",
-    "google-auth-oauthlib>=1.2.2",
+  "google-api-python-client>=2.183.0",
+  "google-auth-httplib2>=0.2.0",
+  "google-auth-oauthlib>=1.2.2",
 ]
 
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+[project.scripts]
+sheets = "sheets:__main__.main"
+
+[project.urls]
+Homepage = "https://github.com/rafaykhan-source/sheets"
+
+[tool.rumdl.MD013]
+reflow = true

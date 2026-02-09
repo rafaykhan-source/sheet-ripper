@@ -293,7 +293,7 @@ wheels = [
 ]
 
 [[package]]
-name = "sheet-ripper"
+name = "sheets"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [

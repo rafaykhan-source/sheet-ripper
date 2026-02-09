@@ -6,6 +6,7 @@ from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
 
 
 @dataclass
@@ -43,6 +44,25 @@ class SheetService:
 
     def build_sheets(self):
         creds = self._authenticate()
-        service = build("sheets", "v4", credentials=creds)
-        sheet = service.spreadsheets()
-        return sheet
+        with build("sheets", "v4", credentials=creds) as service:
+            self.sheets = service.spreadsheets()
+
+    def get_sheet_values(self, id: str, range: str):
+        try:
+            result = (
+                self.sheets.values()
+                .get(
+                    spreadsheetId=id,
+                    range=range,
+                )
+                .execute()
+            )
+            data = result.get("values", [])
+            if not data:
+                self.logger.error("Failed to retrieve data.")
+                return
+            self.logger.info("Retrieved data: %s", data[0])
+            return data
+
+        except HttpError as err:
+            print(err)
