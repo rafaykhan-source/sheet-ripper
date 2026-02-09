@@ -1,6 +1,7 @@
 import json
-import logging
-from logging.config import dictConfig
+
+# import logging
+# from logging.config import dictConfig
 
 
 def _get_logging_config() -> dict:
@@ -8,11 +9,12 @@ def _get_logging_config() -> dict:
         return json.loads(f.read())
 
 
-def get_logger() -> logging.Logger:
-    config = _get_logging_config()
-    dictConfig(config)
-    logger = logging.getLogger(__name__)
-    return logger
+# def get_logger() -> logging.Logger:
+#     config = _get_logging_config()
+#     dictConfig(config)
+#     logger = logging.getLogger(__name__)
+#     return logger
+#
 
 
 def get_spreadsheet_id(url: str) -> str:

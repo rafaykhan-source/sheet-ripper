@@ -1,13 +1,32 @@
+import logging
+
 from sheet_ripper.cli import get_args
 from sheet_ripper.service import SheetService
-from sheet_ripper.utilities import get_logger
+
+# from sheet_ripper.utilities import get_logger
 from sheet_ripper.writer import CSVWriter
 
 
-def main() -> None:
-    logger = get_logger()
-    logger.debug("Loaded logging configuration.")
+def configure_logging() -> logging.Logger:
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.DEBUG)
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.DEBUG)
+    formatter = logging.Formatter(
+        "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+        datefmt="%m/%d/%Y %I:%M:%S %p",
+    )
+    # add formatter to ch
+    ch.setFormatter(formatter)
 
+    # add ch to logger
+    logger.addHandler(ch)
+    logger.debug("Loaded logging configuration.")
+    return logger
+
+
+def main() -> None:
+    logger = configure_logging()
     args = get_args()
     logger.info("Retrieved arguments: id %s | range: %s", args.identifier, args.range)
 
