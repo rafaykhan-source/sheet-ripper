@@ -12,19 +12,25 @@ from googleapiclient.errors import HttpError
 @dataclass
 class SheetService:
     scopes: list[str] = field(default_factory=list)
+    "The desired scopes of the sheet service."
+    auth_path: str = "."
+    "The relative path to the credentials.json and token.json files."
 
     def __post_init__(self):
-        self.scopes = ["https://www.googleapis.com/auth/spreadsheets.readonly"]
         self.logger = logging.getLogger(__name__)
+        if not self.scopes:
+            self.scopes = ["https://www.googleapis.com/auth/spreadsheets.readonly"]
         self._build_sheets()
 
     def _authenticate(self):
         creds = None
-        # The file token.json stores the user's access and refresh tokens, and is
+        # The file token.json storesa:q the user's access and refresh tokens, and is
         # created automatically when the authorization flow completes for the first
         # time.
-        if os.path.exists("token.json"):
-            creds = Credentials.from_authorized_user_file("token.json", self.scopes)
+        if os.path.exists(f"{self.auth_path}/token.json"):
+            creds = Credentials.from_authorized_user_file(
+                f"{self.auth_path}/token.json", self.scopes
+            )
             self.logger.debug("Retrieved credentials from token.json")
 
         # If there are no (valid) credentials available, let the user log in.
@@ -33,11 +39,13 @@ class SheetService:
                 creds.refresh(Request())
             else:
                 flow = InstalledAppFlow.from_client_secrets_file(
-                    "credentials.json", self.scopes
+                    # update path here
+                    f"{self.auth_path}/credentials.json",
+                    self.scopes,
                 )
                 creds = flow.run_local_server(port=0)
             # Save the credentials for the next run
-            with open("token.json", "w") as token:
+            with open(f"{self.auth_path}/token.json", "w") as token:
                 token.write(creds.to_json())
                 self.logger.debug("Retrieved credentials from token.json")
 
