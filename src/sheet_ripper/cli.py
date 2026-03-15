@@ -43,3 +43,7 @@ def get_args():
     if args.target:
         args.range = args.target + "!" + args.range
     return args
+
+
+def run_cli() -> None:
+    pass
