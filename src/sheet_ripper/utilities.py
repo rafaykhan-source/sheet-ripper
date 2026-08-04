@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 
 # import logging
 # from logging.config import dictConfig
@@ -15,6 +16,10 @@ def _get_logging_config() -> dict:
 #     logger = logging.getLogger(__name__)
 #     return logger
 #
+
+def get_config_path() -> str:
+    config_path = Path.home() / '.config' / 'sheet-ripper'
+    return str(config_path)
 
 
 def get_spreadsheet_id(url: str) -> str:

@@ -8,28 +8,33 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
+from sheet_ripper.utilities import get_config_path
+
 
 @dataclass
 class SheetService:
     scopes: list[str] = field(default_factory=list)
     "The desired scopes of the sheet service."
-    auth_path: str = "."
+    auth_path: str | None = None
     "The relative path to the credentials.json and token.json files."
 
     def __post_init__(self):
         self.logger = logging.getLogger(__name__)
+        if not self.auth_path:
+            self.auth_path = get_config_path()
         if not self.scopes:
             self.scopes = ["https://www.googleapis.com/auth/spreadsheets.readonly"]
         self._build_sheets()
 
     def _authenticate(self):
         creds = None
-        # The file token.json storesa:q the user's access and refresh tokens, and is
+        # The file token.json stores the user's access and refresh tokens, and is
         # created automatically when the authorization flow completes for the first
         # time.
         if os.path.exists(f"{self.auth_path}/token.json"):
             creds = Credentials.from_authorized_user_file(
-                f"{self.auth_path}/token.json", self.scopes
+                f"{self.auth_path}/token.json",
+                self.scopes,
             )
             self.logger.debug("Retrieved credentials from token.json")
 
@@ -39,7 +44,6 @@ class SheetService:
                 creds.refresh(Request())
             else:
                 flow = InstalledAppFlow.from_client_secrets_file(
-                    # update path here
                     f"{self.auth_path}/credentials.json",
                     self.scopes,
                 )
