@@ -4,7 +4,7 @@ build-backend = "uv_build"
 
 [project]
 name = "sheet-ripper"
-version = "0.1.4"
+version = "0.2.0"
 description = "Download and Upload Google Sheets."
 authors = [{ name = "Rafay Khan", email = "contact.hazelnut560@passinbox.com" }]
 license = "MIT"
