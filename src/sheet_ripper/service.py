@@ -26,11 +26,12 @@ class SheetService:
             self.scopes = ["https://www.googleapis.com/auth/spreadsheets.readonly"]
         self._build_sheets()
 
-    def _authenticate(self):
-        creds = None
-        # The file token.json stores the user's access and refresh tokens, and is
-        # created automatically when the authorization flow completes for the first
-        # time.
+    def _write_token(self, creds: Credentials) -> None:
+        with open(f"{self.auth_path}/token.json", "w") as token:
+            token.write(creds.to_json())
+            self.logger.debug("Wrote credentials to token.json")
+
+    def _get_creds_from_token(self) -> Credentials:
         if os.path.exists(f"{self.auth_path}/token.json"):
             creds = Credentials.from_authorized_user_file(
                 f"{self.auth_path}/token.json",
@@ -38,20 +39,41 @@ class SheetService:
             )
             self.logger.debug("Retrieved credentials from token.json")
 
-        # If there are no (valid) credentials available, let the user log in.
-        if not creds or not creds.valid:
-            if creds and creds.expired and creds.refresh_token:
-                creds.refresh(Request())
-            else:
-                flow = InstalledAppFlow.from_client_secrets_file(
-                    f"{self.auth_path}/credentials.json",
-                    self.scopes,
-                )
-                creds = flow.run_local_server(port=0)
-            # Save the credentials for the next run
-            with open(f"{self.auth_path}/token.json", "w") as token:
-                token.write(creds.to_json())
-                self.logger.debug("Retrieved credentials from token.json")
+        return creds
+
+    def _get_creds_from_auth_flow(self) -> Credentials:
+        auth_flow = InstalledAppFlow.from_client_secrets_file(
+            f"{self.auth_path}/credentials.json",
+            self.scopes,
+        )
+        creds = auth_flow.run_local_server(port=0)
+        self.logger.debug("Retrieved credentials from authentication flow.")
+
+        return creds
+
+    def _authenticate(self) -> Credentials:
+        """Returns user credentials for authentication.
+
+        The file token.json stores the user's access and refresh tokens, and is
+        created automatically when the authorization flow completes for the first
+        time.
+
+        Returns:
+            Credentials: The user credentials for authentication.
+        """
+        creds_from_token = self._get_creds_from_token()
+
+        if not creds_from_token:
+            creds = self._get_creds_from_auth_flow()
+            self._write_token(creds)
+            return creds
+
+        if creds_from_token.expired and creds_from_token.refresh_token:
+            creds_from_token.refresh(Request())
+            return creds_from_token
+
+        creds = self._get_creds_from_auth_flow()
+        self._write_token(creds)
 
         return creds
 
